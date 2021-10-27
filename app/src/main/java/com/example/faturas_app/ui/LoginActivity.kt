@@ -22,11 +22,9 @@ class LoginActivity : AppCompatActivity() {
     lateinit var binding: ActivityLoginBinding
     var email = ""
     var senha = ""
-    var id = 0
 
 
-
-    var builder = Retrofit.Builder().baseUrl("http://10.0.0.113:8080/")
+    var builder = Retrofit.Builder().baseUrl("http://172.17.0.1:8080/")
         .addConverterFactory(GsonConverterFactory.create())
 
     var retrofit = builder.build()
@@ -35,18 +33,17 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sh = getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val token = sh.getString("token", null)
+
 
         binding.buttonLogin.setOnClickListener {
             email = binding.editEmail.text.toString()
             senha = binding.editSenha.text.toString()
-            if (token != null) {
-                getUsuarioApi(token, 1L)
-            }
+            geraTokenAuth()
+
+
 
         }
 
@@ -66,7 +63,50 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    fun geraTokenAuth() {
 
+        val login = Login(
+            email = binding.editEmail.text.toString(),
+            senha = binding.editSenha.text.toString(),
+
+            )
+        val call = usuarioService.gerarToken(login)
+
+
+
+
+        call?.enqueue(object : Callback<Usuario?> {
+            override fun onResponse(call: Call<Usuario?>, response: Response<Usuario?>) {
+
+
+                if (response.isSuccessful) {
+                    val token = response.body()?.token.toString()
+                    val idUsuario = response.body()?.id
+                    val sh = getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
+                    sh.edit().putString("token", token).apply()
+                    if (idUsuario != null) {
+                        sh.edit().putLong("id", idUsuario).apply()
+                    }
+                    getUsuarioApi(token, 1L)
+
+
+                } else {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Não foi possível acessar a API",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Usuario?>, t: Throwable) {
+                Toast.makeText(this@LoginActivity, "login incorreto", Toast.LENGTH_SHORT).show()
+
+            }
+
+        })
+
+    }
 
 
     fun getUsuarioApi(token: String, id: Long) {

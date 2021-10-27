@@ -19,7 +19,6 @@ import java.util.*
 class HomeActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHomeBinding
-    lateinit var venda: Venda
 
 
     var builder = Retrofit.Builder().baseUrl("http://10.0.0.113:8080/")
