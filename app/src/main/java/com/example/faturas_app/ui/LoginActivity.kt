@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
         call?.enqueue(object : Callback<Usuario?> {
             override fun onResponse(call: Call<Usuario?>, response: Response<Usuario?>) {
-
+a
 
                 if (response.isSuccessful) {
                     val token = response.body()?.token.toString()
