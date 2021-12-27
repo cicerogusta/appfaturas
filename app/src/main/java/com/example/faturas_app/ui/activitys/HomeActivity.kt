@@ -6,29 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.faturas_app.R
-import com.example.faturas_app.adapter.AdapterMovimentacao
+import com.example.faturas_app.adapter.AdapterVendas
+import com.example.faturas_app.adapter.MyPagerAdapter
+import com.example.faturas_app.contract.SellContract
 import com.example.faturas_app.databinding.ActivityHomeBinding
 import com.example.faturas_app.model.apiModel.Venda
-import com.example.faturas_app.ui.fragments.FirstFragment
-import com.example.faturas_app.ui.fragments.SecondFragment
-import com.example.faturas_app.contract.SellContract
 import com.example.faturas_app.presenter.VendaPresenter
 import com.google.android.material.tabs.TabLayout
-import java.text.SimpleDateFormat
 
-class HomeActivity : AppCompatActivity(), SellContract.ListaVendasView {
+class HomeActivity : AppCompatActivity(), SellContract.HomeView {
 
     lateinit var binding: ActivityHomeBinding
-    lateinit var adapterVenda: AdapterMovimentacao
-    val graphicFragment = FirstFragment()
-    val cardFragment = SecondFragment()
+    lateinit var adapterVenda: AdapterVendas
 
     lateinit var presenter: VendaPresenter
 
@@ -37,28 +29,37 @@ class HomeActivity : AppCompatActivity(), SellContract.ListaVendasView {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.pager.adapter = SlidePagerAdapter(supportFragmentManager, lifecycle)
+        binding.pager.adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
         setupTabLayout()
 
 
-        val token = getSharedPreferences("MySharedPref", Context.MODE_PRIVATE).getString("token", null)
+        presenter = VendaPresenter(this)
+        presenter.getVendas()
 
-        if (token != null) {
-            presenter = VendaPresenter(this)
-            presenter.getVendas(token)
-        }
+        pageChangeCallBack()
+
+    }
 
 
+    override fun mostraVendas(vendas: ArrayList<Venda>) {
+        val recyclerVendas = binding.recyclerVendas
 
+        adapterVenda = AdapterVendas(vendas)
+
+        recyclerVendas.layoutManager = LinearLayoutManager(this)
+        recyclerVendas.adapter = adapterVenda
+
+    }
+
+    override fun pageChangeCallBack() {
         binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 binding.tabs.selectTab(binding.tabs.getTabAt(position))
             }
         })
-
     }
 
-     private fun setupTabLayout() {
+    override fun setupTabLayout() {
 
         binding.tabs.addTab(binding.tabs.newTab())
         binding.tabs.addTab(binding.tabs.newTab())
@@ -92,33 +93,9 @@ class HomeActivity : AppCompatActivity(), SellContract.ListaVendasView {
         })
     }
 
-    inner class SlidePagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
-        FragmentStateAdapter(fm, lifecycle) {
-        override fun getItemCount(): Int {
-            return 2
-        }
-
-        override fun createFragment(position: Int): Fragment {
-            return if (position == 0) {
-                graphicFragment
-            } else {
-                cardFragment
-            }
-        }
-
+    override fun getToken(): String? {
+        return getSharedPreferences("MySharedPref", Context.MODE_PRIVATE).getString("token", null)
     }
-
-   override fun mostraVendas(vendas: ArrayList<Venda>) {
-        val recyclerVendas = binding.recyclerVendas
-
-        adapterVenda = AdapterMovimentacao(vendas)
-
-        recyclerVendas.layoutManager = LinearLayoutManager(this)
-        recyclerVendas.adapter = adapterVenda
-
-    }
-
-
 
 
 }

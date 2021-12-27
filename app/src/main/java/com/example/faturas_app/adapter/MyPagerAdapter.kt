@@ -7,10 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.faturas_app.ui.fragments.FirstFragment
 import com.example.faturas_app.ui.fragments.SecondFragment
 
-class MyAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
+class MyPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    val graphicFragment = FirstFragment()
-    val cardFragment = SecondFragment()
     override fun getItemCount(): Int {
         return 2
     }
@@ -18,9 +17,9 @@ class MyAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : Fragme
 
     override fun createFragment(position: Int): Fragment {
         return if (position == 0) {
-            graphicFragment
-        }else{
-            cardFragment
+            FirstFragment()
+        } else {
+            SecondFragment()
         }
     }
 

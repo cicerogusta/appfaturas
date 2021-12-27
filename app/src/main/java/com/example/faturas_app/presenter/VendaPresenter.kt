@@ -7,20 +7,22 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-data class VendaPresenter(private var view: SellContract.ListaVendasView) :
-    SellContract.VendasListPresenter.VendasListView, SellContract.VendasListPresenter {
-
-     override fun setView(listaVendasView: SellContract.ListaVendasView) {
-        view = listaVendasView
+data class VendaPresenter(private var view: SellContract.HomeView) :
+    SellContract.HomePresenter {
+    override fun getToken(): String? {
+       return view.getToken()
     }
 
-    override fun getVendas(token: String) {
+    override fun getVendas() {
+
 
         val list = ArrayList<Venda>()
 
 
-        val call = RetrofitCall.retrofit().getVendas("Bearer $token")
+        val call = RetrofitCall.retrofit().getVendas("Bearer ${getToken()}")
 
         call.enqueue(object : Callback<List<Venda>> {
             override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {
@@ -48,9 +50,8 @@ data class VendaPresenter(private var view: SellContract.ListaVendasView) :
     }
 
     fun fornatDataVenda(date: String): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        //val output = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val output = SimpleDateFormat("dd/MM")
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        val output = SimpleDateFormat("dd/MM", Locale.US)
         val d = sdf.parse(date)
 
 

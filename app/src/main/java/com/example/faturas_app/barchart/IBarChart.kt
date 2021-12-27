@@ -1,6 +1,5 @@
 package com.example.faturas_app.barchart
 
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarEntry
 
 interface IBarChart {

@@ -1,25 +1,27 @@
 package com.example.faturas_app.contract
 
+import android.content.SharedPreferences
 import com.example.faturas_app.model.apiModel.Venda
 
 interface SellContract {
 
-    interface ListaVendasView {
+    interface HomeView {
 
         fun mostraVendas(vendas: ArrayList<Venda>)
+        fun pageChangeCallBack()
+        fun setupTabLayout()
+        fun getToken(): String?
 
 
 
 
     }
 
-    interface VendasListPresenter {
+    interface HomePresenter {
 
-        interface VendasListView{
-            fun setView(listaVendasView: ListaVendasView)
-        }
 
-        fun getVendas(token: String)
+        fun getToken(): String?
+        fun getVendas()
 
 
 

@@ -2,19 +2,20 @@ package com.example.faturas_app.presenter
 
 import com.example.faturas_app.contract.ClientContract
 import com.example.faturas_app.contract.SellContract
-import com.example.faturas_app.model.apiModel.Cliente
 import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.network.retrofit.RetrofitCall
-import com.github.mikephil.charting.data.BarEntry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.math.BigDecimal
 
-data class ClientePresenter(val view: ClientContract.View) : SellContract.VendasListPresenter {
-    override fun getVendas(token: String) {
+data class ClientePresenter(val view: ClientContract.View) : SellContract.HomePresenter {
+    override fun getToken(): String? {
+        return view.getToken()
+    }
 
-        val call = RetrofitCall.retrofit().getVendas("Bearer $token")
+    override fun getVendas() {
+
+        val call = RetrofitCall.retrofit().getVendas("Bearer ${getToken()}")
 
         call.enqueue(object : Callback<List<Venda>> {
             override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {

@@ -23,14 +23,14 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             app:tabMode="fixed"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/purple_500"
-            app:tabGravity="fill"
-            />
+            android:background="@color/gray"
+            app:tabGravity="fill"/>
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"
             android:layout_width="match_parent"

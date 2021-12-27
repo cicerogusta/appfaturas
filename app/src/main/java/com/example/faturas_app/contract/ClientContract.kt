@@ -6,5 +6,6 @@ interface ClientContract {
 
     interface View {
         fun getClientCreditCard() : FragmentSecondBinding
+        fun getToken() : String?
     }
 }

@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.faturas_app.contract.ClientContract
 import com.example.faturas_app.databinding.FragmentSecondBinding
-import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.presenter.ClientePresenter
-import com.example.faturas_app.presenter.VendaPresenter
 
 
 class SecondFragment : Fragment(), ClientContract.View {
@@ -30,11 +28,8 @@ class SecondFragment : Fragment(), ClientContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val token = activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)?.getString("token", null)
-        if (token != null) {
             presenter = ClientePresenter(this)
-            presenter.getVendas(token)
-        }
+            presenter.getVendas()
 
 
 
@@ -44,6 +39,10 @@ class SecondFragment : Fragment(), ClientContract.View {
     override fun getClientCreditCard(): FragmentSecondBinding {
 
         return binding
+    }
+
+    override fun getToken(): String? {
+        return activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)?.getString("token", null)
     }
 
 

@@ -5,5 +5,4 @@ class Cliente(
     val expirationDate: String?= null,
     val gasto: String? = null,
     var disponivel: String? = null,
-    var vendas: List<Venda>? = null
 )

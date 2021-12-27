@@ -12,32 +12,45 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 data class GraficoPresenter(var view: GraphicContract.GraficoView, val context: Context) :
-    SellContract.VendasListPresenter, IDateUtil {
-    val list = ArrayList<Venda>()
+    SellContract.HomePresenter, IDateUtil {
+    val listaVendas = ArrayList<Venda>()
     val yVals1 = ArrayList<BarEntry>()
     val labels = ArrayList<String>()
+    val barChartService = BarChartService(view.getBarChart(), context)
 
-     fun getGrafico() {
-        view.getBarChart()
+
+    fun getGrafico() {
+        barChartService.initBarChart()
+        barChartService.leftAxisSetup()
+        barChartService.rightAxisSetup()
+        barChartService.legendSetup()
     }
 
      fun setDataGrafico(labels: ArrayList<String>, yVals1: ArrayList<BarEntry>) {
-        val barChartService = BarChartService(view.getBarChart(), context)
         barChartService.setData(labels, yVals1)
     }
 
-    override fun getVendas(token: String) {
-        val call = RetrofitCall.retrofit().getVendas("Bearer $token")
+    override fun getToken(): String? {
+        return view.getToken()
+    }
+
+
+    override fun getVendas() {
+
+
+        val call = RetrofitCall.retrofit().getVendas("Bearer ${getToken()}")
 
         call.enqueue(object : Callback<List<Venda>> {
             override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {
                 if (response.isSuccessful) {
                     response.body()
                         ?.forEach {
-                            list.add(it)
-                            yVals1.add(BarEntry(list.size.toFloat(), it.valor.toFloat()))
+                            listaVendas.add(it)
+                            yVals1.add(BarEntry(listaVendas.size.toFloat(), it.valor.toFloat()))
                             labels.add(fornatDataVenda(it.date))
                             setDataGrafico(labels, yVals1)
 
@@ -57,9 +70,9 @@ data class GraficoPresenter(var view: GraphicContract.GraficoView, val context: 
     }
 
     override fun fornatDataVenda(date: String): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
         //val output = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val output = SimpleDateFormat("dd/MM")
+        val output = SimpleDateFormat("dd/MM", Locale.US)
         val d = sdf.parse(date)
         return output.format(d)
     }

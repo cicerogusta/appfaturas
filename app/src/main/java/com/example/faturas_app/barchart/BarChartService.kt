@@ -13,7 +13,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 
 data class BarChartService(private val barChart: BarChart, val context: Context) : IBarChart {
     override fun initBarChart() {
-        barChart.setNoDataText("Carregando...")
+        barChart.setNoDataText("Clique para exibir o grafico de compras!")
         barChart.setDrawBarShadow(false)
         barChart.setDrawValueAboveBar(true)
         barChart.description.isEnabled = false
@@ -24,7 +24,6 @@ data class BarChartService(private val barChart: BarChart, val context: Context)
     }
 
     override fun leftAxisSetup() {
-        barChart.axisLeft
         barChart.axisLeft.valueFormatter = MyAxisValueFormatter()
         barChart.axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
         barChart.axisLeft.spaceTop = 15f
@@ -32,7 +31,6 @@ data class BarChartService(private val barChart: BarChart, val context: Context)
     }
 
     override fun rightAxisSetup() {
-        barChart.axisRight
         barChart.axisRight.setDrawGridLines(false)
         barChart.axisRight.isEnabled = false
     }

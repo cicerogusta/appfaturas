@@ -3,20 +3,20 @@ package com.example.faturas_app.ui.activitys
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.faturas_app.contract.LoginContract
 import com.example.faturas_app.databinding.ActivityLoginBinding
-import com.example.faturas_app.model.apiModel.Login
-import com.example.faturas_app.model.apiModel.Token
-import com.example.faturas_app.network.retrofit.RetrofitCall
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.faturas_app.presenter.LoginPresenter
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginContract.View {
 
-    lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
+
+    override fun getBinding(): ActivityLoginBinding {
+        return binding
+    }
+
     var email = ""
     var senha = ""
 
@@ -25,10 +25,12 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         binding.buttonLogin.setOnClickListener {
             email = binding.editEmail.text.toString()
             senha = binding.editSenha.text.toString()
-            geraTokenAuth()
+            val presenter = LoginPresenter(this)
+            presenter.login()
 
         }
     }
@@ -44,39 +46,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun geraTokenAuth() {
-
-        val login = Login(
-            email = binding.editEmail.text.toString(),
-            senha = binding.editSenha.text.toString(),
-
-            )
-        val call = RetrofitCall.retrofit().gerarToken(login)
-
-        call.enqueue(object : Callback<Token?> {
-            override fun onResponse(call: Call<Token?>, response: Response<Token?>) {
-
-                if (response.isSuccessful) {
-                    val token = response.body()?.token
-                    val sh = getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
-                    sh.edit().putString("token", token).apply()
-                    startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-
-                } else {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Não foi possível acessar a API",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            override fun onFailure(call: Call<Token?>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "login incorreto", Toast.LENGTH_SHORT).show()
-
-            }
-
-        })
+    override fun startNewActivity() {
+        startActivity(Intent(this, HomeActivity::class.java))
 
     }
+
+    override fun saveToken(token: String) {
+        getSharedPreferences("MySharedPref", Context.MODE_PRIVATE).edit().putString("token", token)
+            .apply()
+    }
+
+
 }
