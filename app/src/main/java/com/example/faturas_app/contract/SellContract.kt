@@ -2,6 +2,7 @@ package com.example.faturas_app.contract
 
 import android.content.SharedPreferences
 import com.example.faturas_app.model.apiModel.Venda
+import com.github.mikephil.charting.data.BarEntry
 
 interface SellContract {
 
@@ -22,6 +23,8 @@ interface SellContract {
 
         fun getToken(): String?
         fun getVendas()
+
+
 
 
 

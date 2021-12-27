@@ -3,6 +3,7 @@ package com.example.faturas_app.presenter
 import com.example.faturas_app.contract.SellContract
 import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.network.retrofit.RetrofitCall
+import com.example.faturas_app.util.IDateUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,7 +12,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class VendaPresenter(private var view: SellContract.HomeView) :
-    SellContract.HomePresenter {
+    SellContract.HomePresenter, IDateUtil {
     override fun getToken(): String? {
        return view.getToken()
     }
@@ -29,7 +30,7 @@ data class VendaPresenter(private var view: SellContract.HomeView) :
                 if (response.isSuccessful) {
                     response.body()
                         ?.forEach {
-                            it.date = fornatDataVenda(it.date)
+                            it.date = formatDataVenda(it.date)
                             it.valor = "R$ " + it.valor
                             list.add(it)
                             view.mostraVendas(list)
@@ -49,7 +50,7 @@ data class VendaPresenter(private var view: SellContract.HomeView) :
 
     }
 
-    fun fornatDataVenda(date: String): String {
+    override fun formatDataVenda(date: String): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
         val output = SimpleDateFormat("dd/MM", Locale.US)
         val d = sdf.parse(date)

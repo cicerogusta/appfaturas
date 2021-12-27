@@ -16,21 +16,21 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class GraficoPresenter(var view: GraphicContract.GraficoView, val context: Context) :
-    SellContract.HomePresenter, IDateUtil {
+    GraphicContract.GraficoPresenter, IDateUtil {
     val listaVendas = ArrayList<Venda>()
     val yVals1 = ArrayList<BarEntry>()
     val labels = ArrayList<String>()
-    val barChartService = BarChartService(view.getBarChart(), context)
+    private val barChartService = BarChartService(view.getBarChart(), context)
 
 
-    fun getGrafico() {
+   override fun getGrafico() {
         barChartService.initBarChart()
         barChartService.leftAxisSetup()
         barChartService.rightAxisSetup()
         barChartService.legendSetup()
     }
 
-     fun setDataGrafico(labels: ArrayList<String>, yVals1: ArrayList<BarEntry>) {
+     override fun setDataGrafico(labels: ArrayList<String>, yVals1: ArrayList<BarEntry>) {
         barChartService.setData(labels, yVals1)
     }
 
@@ -51,7 +51,7 @@ data class GraficoPresenter(var view: GraphicContract.GraficoView, val context: 
                         ?.forEach {
                             listaVendas.add(it)
                             yVals1.add(BarEntry(listaVendas.size.toFloat(), it.valor.toFloat()))
-                            labels.add(fornatDataVenda(it.date))
+                            labels.add(formatDataVenda(it.date))
                             setDataGrafico(labels, yVals1)
 
 
@@ -69,9 +69,8 @@ data class GraficoPresenter(var view: GraphicContract.GraficoView, val context: 
 
     }
 
-    override fun fornatDataVenda(date: String): String {
+    override fun formatDataVenda(date: String): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-        //val output = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val output = SimpleDateFormat("dd/MM", Locale.US)
         val d = sdf.parse(date)
         return output.format(d)
