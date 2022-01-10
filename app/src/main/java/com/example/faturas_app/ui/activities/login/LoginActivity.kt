@@ -1,22 +1,20 @@
-package com.example.faturas_app.ui.activitys
+package com.example.faturas_app.ui.activities.login
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.faturas_app.contract.HomeContract
 import com.example.faturas_app.contract.LoginContract
 import com.example.faturas_app.databinding.ActivityLoginBinding
-import com.example.faturas_app.presenter.LoginPresenter
+import com.example.faturas_app.presenter.Presenter
+import com.example.faturas_app.ui.activities.home.HomeActivity
 
 
-class LoginActivity : AppCompatActivity(), LoginContract.View {
+class LoginActivity : AppCompatActivity(), HomeContract.View.LoginView {
 
     private lateinit var binding: ActivityLoginBinding
-
-    override fun getBinding(): ActivityLoginBinding {
-        return binding
-    }
-
     var email = ""
     var senha = ""
 
@@ -29,7 +27,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
         binding.buttonLogin.setOnClickListener {
             email = binding.editEmail.text.toString()
             senha = binding.editSenha.text.toString()
-            val presenter = LoginPresenter(this)
+            val presenter = Presenter(loginView = this)
             presenter.login()
 
         }
@@ -51,9 +49,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     }
 
-    override fun saveToken(token: String) {
-        getSharedPreferences("MySharedPref", Context.MODE_PRIVATE).edit().putString("token", token)
-            .apply()
+
+    override fun getComponentLoginBinding(): ActivityLoginBinding {
+        return binding
+    }
+
+    override fun getPreferences(): SharedPreferences {
+        return getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
     }
 
 

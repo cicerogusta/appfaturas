@@ -8,7 +8,6 @@ interface LoginContract {
 
         fun getBinding() : ActivityLoginBinding
         fun startNewActivity()
-        fun saveToken(token:String)
     }
 
     interface Presenter {

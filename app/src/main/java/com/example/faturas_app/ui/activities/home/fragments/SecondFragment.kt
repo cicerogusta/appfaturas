@@ -1,20 +1,19 @@
-package com.example.faturas_app.ui.fragments
+package com.example.faturas_app.ui.activities.home.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.faturas_app.contract.ClientContract
+import com.example.faturas_app.contract.HomeContract
 import com.example.faturas_app.databinding.FragmentSecondBinding
-import com.example.faturas_app.presenter.ClientePresenter
+import com.example.faturas_app.presenter.Presenter
 
 
-class SecondFragment : Fragment(), ClientContract.View {
+class SecondFragment : Fragment(), HomeContract.View.CreditCardFragmentView {
 
     lateinit var binding: FragmentSecondBinding
-    lateinit var presenter: ClientePresenter
+    lateinit var presenter: Presenter
 
 
 
@@ -28,8 +27,8 @@ class SecondFragment : Fragment(), ClientContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-            presenter = ClientePresenter(this)
-            presenter.getVendas()
+            presenter = Presenter()
+            presenter.getCreditCardValues()
 
 
 
@@ -41,9 +40,6 @@ class SecondFragment : Fragment(), ClientContract.View {
         return binding
     }
 
-    override fun getToken(): String? {
-        return activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)?.getString("token", null)
-    }
 
 
 }

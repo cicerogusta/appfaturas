@@ -1,28 +1,32 @@
-package com.example.faturas_app.ui.activitys
+package com.example.faturas_app.ui.activities.home
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.example.faturas_app.R
 import com.example.faturas_app.adapter.AdapterVendas
 import com.example.faturas_app.adapter.MyPagerAdapter
-import com.example.faturas_app.contract.SellContract
+import com.example.faturas_app.contract.HomeContract
 import com.example.faturas_app.databinding.ActivityHomeBinding
 import com.example.faturas_app.model.apiModel.Venda
-import com.example.faturas_app.presenter.VendaPresenter
+import com.example.faturas_app.presenter.Presenter
 import com.google.android.material.tabs.TabLayout
+import kotlin.collections.ArrayList
 
-class HomeActivity : AppCompatActivity(), SellContract.HomeView {
+class HomeActivity : AppCompatActivity(), HomeContract.View.HomeView {
 
     lateinit var binding: ActivityHomeBinding
     lateinit var adapterVenda: AdapterVendas
 
-    lateinit var presenter: VendaPresenter
+    lateinit var presenter: Presenter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +37,40 @@ class HomeActivity : AppCompatActivity(), SellContract.HomeView {
         setupTabLayout()
 
 
-        presenter = VendaPresenter(this)
-        presenter.getVendas()
+        presenter = Presenter(homeView = this)
+        presenter.getListaVendas()
+
+
+        val refreshListener = SwipeRefreshLayout.OnRefreshListener {
+            binding.swiperefresh.isRefreshing = true
+//            if (isTokenExpirated()){
+//                finish()
+//            }
+
+        }
+
+        binding.swiperefresh.setOnRefreshListener(refreshListener)
+
 
         pageChangeCallBack()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.bottom_navigation_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_exit -> {
+                finish()
+//                isTokenExpirated() = false
+                true
+            }else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 
 
@@ -93,9 +126,12 @@ class HomeActivity : AppCompatActivity(), SellContract.HomeView {
         })
     }
 
-    override fun getToken(): String? {
-        return getSharedPreferences("MySharedPref", Context.MODE_PRIVATE).getString("token", null)
+
+    override fun getComponentHomeBinding(): ActivityHomeBinding {
+        return binding
     }
+
+
 
 
 }

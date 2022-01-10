@@ -1,23 +1,21 @@
-package com.example.faturas_app.ui.fragments
+package com.example.faturas_app.ui.activities.home.fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.faturas_app.barchart.BarChartService
-import com.example.faturas_app.contract.GraphicContract
+import com.example.faturas_app.contract.HomeContract
 import com.example.faturas_app.databinding.FragmentFirstBinding
-import com.example.faturas_app.presenter.GraficoPresenter
+import com.example.faturas_app.presenter.Presenter
 import com.github.mikephil.charting.charts.BarChart
 
-class FirstFragment : Fragment(), GraphicContract.GraficoView {
+class FirstFragment : Fragment(), HomeContract.View.FragmentGraficoView {
 
     lateinit var binding: FragmentFirstBinding
     private lateinit var barChartService: BarChartService
-    lateinit var presenter: GraficoPresenter
+    lateinit var presenter: Presenter
 
 
 
@@ -27,7 +25,7 @@ class FirstFragment : Fragment(), GraphicContract.GraficoView {
     ): View {
         binding = FragmentFirstBinding.inflate(inflater)
         barChartService = context?.let { BarChartService(binding.barChart, it) }!!
-        presenter = GraficoPresenter(this, requireContext())
+        presenter = Presenter(this)
         return binding.root
 
     }
@@ -36,8 +34,8 @@ class FirstFragment : Fragment(), GraphicContract.GraficoView {
         super.onViewCreated(view, savedInstanceState)
 
 
-        presenter.getGrafico()
-        presenter.getVendas()
+        presenter.configGrafico()
+        presenter.getGraficoVendas()
 
 
 
@@ -47,9 +45,6 @@ class FirstFragment : Fragment(), GraphicContract.GraficoView {
         return binding.barChart
     }
 
-    override fun getToken(): String? {
-        return activity?.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)?.getString("token", null)
-    }
 
 
 }

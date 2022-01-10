@@ -1,3 +1,5 @@
 package com.example.faturas_app.model.apiModel
 
-class Token(val token: String?)
+import java.util.Date
+
+class Token(val token: String?, val tipo: String, val refreshToken: String)
