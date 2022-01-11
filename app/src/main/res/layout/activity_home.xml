@@ -7,8 +7,6 @@
 
     </data>
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -66,6 +64,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:tabGravity="fill"
             app:tabMode="fixed" />
+
+
 
 
 

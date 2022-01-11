@@ -11,7 +11,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
-    @POST("/api/auth/signin")
+    @POST("/auth")
     fun gerarToken(@Body login: Login): Call<Token?>
 
     @GET("/api/vendas")

@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.faturas_app.R
 import com.example.faturas_app.contract.HomeContract
 import com.example.faturas_app.contract.LoginContract
 import com.example.faturas_app.databinding.ActivityLoginBinding
@@ -22,6 +24,9 @@ class LoginActivity : AppCompatActivity(), HomeContract.View.LoginView {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.appbar_layout_config)
 
 
         binding.buttonLogin.setOnClickListener {

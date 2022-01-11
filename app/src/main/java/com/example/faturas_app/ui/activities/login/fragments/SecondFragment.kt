@@ -1,4 +1,4 @@
-package com.example.faturas_app.ui.activities.home.fragments
+package com.example.faturas_app.ui.activities.login.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

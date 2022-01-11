@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -36,6 +37,8 @@ class HomeActivity : AppCompatActivity(), HomeContract.View.HomeView {
         binding.pager.adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
         setupTabLayout()
 
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.appbar_layout_config)
 
         presenter = Presenter(homeView = this)
         presenter.getListaVendas()

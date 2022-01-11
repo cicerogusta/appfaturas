@@ -39,9 +39,6 @@ android {
 
 dependencies {
 
-    // https://mvnrepository.com/artifact/javax.inject/javax.inject
-    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
-
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.4.0'
