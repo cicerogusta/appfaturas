@@ -1,7 +1,6 @@
 package com.example.faturas_app.presenter
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.example.faturas_app.barchart.BarChartService
 import com.example.faturas_app.contract.HomeContract
 import com.example.faturas_app.model.apiModel.Login
@@ -9,6 +8,7 @@ import com.example.faturas_app.model.apiModel.Token
 import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.network.retrofit.RetrofitCall
 import com.example.faturas_app.util.IDateUtil
+import com.example.faturas_app.util.IPreferencesHelper
 import com.github.mikephil.charting.data.BarEntry
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,23 +16,24 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.log
 
-class Presenter(
+data class Presenter(
     val graficoView: HomeContract.View.FragmentGraficoView? = null,
-    context: Context? = null,
+    val context: Context,
     val homeView: HomeContract.View.HomeView? = null,
     val cardFragmentView: HomeContract.View.CreditCardFragmentView? = null,
     val loginView: HomeContract.View.LoginView? = null,
 ) :
-    HomeContract.Presenter, IDateUtil {
+    HomeContract.Presenter, IDateUtil, IPreferencesHelper {
+
+    val sharedPreferences = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
 
 
     val listaVendas = ArrayList<Venda>()
     val yVals1 = ArrayList<BarEntry>()
     val labels = ArrayList<String>()
     private val barChartService =
-        context?.let { graficoView?.let { it1 -> BarChartService(it1.getBarChart(), it) } }
+        context.let { graficoView?.let { it1 -> BarChartService(it1.getBarChart(), it) } }
 
 
     override fun configGrafico() {
@@ -114,9 +115,9 @@ class Presenter(
 
 
             override fun onFailure(call: Call<List<Venda>>, t: Throwable) {
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.isRefreshing = false
-                }
+//                if (swipeRefreshLayout != null) {
+//                    swipeRefreshLayout.isRefreshing = false
+//                }
 
             }
 
@@ -160,19 +161,6 @@ class Presenter(
         })
     }
 
-    override fun saveToken(token: String) {
-        getSharedPreferences()?.edit()?.putString("token", token)?.apply()
-
-    }
-
-    override fun getToken(): String? {
-        return getSharedPreferences()?.getString("token", null)
-    }
-
-    override fun getSharedPreferences(): SharedPreferences? {
-        return loginView?.getPreferences()
-    }
-
     override fun lastFourNumber(cardNumber: String): String {
         val a = cardNumber.toCharArray()
 
@@ -204,5 +192,13 @@ class Presenter(
 
         })
 
+    }
+
+    override fun saveToken(token: String) {
+        sharedPreferences?.edit()?.putString("token", token)?.apply()
+    }
+
+    override fun getToken(): String? {
+       return sharedPreferences?.getString("token", null)
     }
 }

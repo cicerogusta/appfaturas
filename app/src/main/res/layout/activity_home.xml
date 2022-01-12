@@ -66,11 +66,6 @@
             app:tabMode="fixed" />
 
 
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.faturas_app.ui.activities.home.fragments.FirstFragment
-import com.example.faturas_app.ui.activities.login.fragments.SecondFragment
+import com.example.faturas_app.ui.activities.home.fragments.SecondFragment
 
 class MyPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {

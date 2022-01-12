@@ -1,7 +1,6 @@
 package com.example.faturas_app.barchart
 
 import android.content.Context
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.components.MarkerView
 import com.example.faturas_app.R
 import android.widget.TextView

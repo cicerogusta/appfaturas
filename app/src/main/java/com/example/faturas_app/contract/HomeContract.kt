@@ -20,6 +20,7 @@ interface HomeContract {
             fun pageChangeCallBack()
             fun setupTabLayout()
             fun getComponentHomeBinding() : ActivityHomeBinding
+
         }
 
         interface CreditCardFragmentView {
@@ -29,7 +30,6 @@ interface HomeContract {
 
         interface LoginView {
             fun getComponentLoginBinding() : ActivityLoginBinding
-            fun getPreferences() : SharedPreferences
             fun startNewActivity()
 
         }
@@ -43,9 +43,7 @@ interface HomeContract {
         fun setDataGrafico(labels: ArrayList<String>, yVals1: ArrayList<BarEntry>)
         fun formatDataVenda(date: String): String
         fun getCreditCardValues()
-        fun saveToken(token: String)
-        fun getToken(): String?
-        fun getSharedPreferences(): SharedPreferences?
+
         fun lastFourNumber(cardNumber: String): String
         fun login()
 
@@ -53,19 +51,6 @@ interface HomeContract {
 
 
         fun getListaVendas()
-
-
-        interface PreferencesUtil {
-            interface Save {
-
-
-            }
-
-            interface Get {
-
-            }
-
-        }
 
 
     }
