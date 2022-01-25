@@ -1,37 +1,41 @@
 package com.example.faturas_app.presenter
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.faturas_app.barchart.BarChartService
-import com.example.faturas_app.contract.HomeContract
-import com.example.faturas_app.model.apiModel.Login
+import com.example.faturas_app.contract.Contract
+import com.example.faturas_app.model.apiModel.LoginRequest
+import com.example.faturas_app.model.apiModel.RefreshToken
 import com.example.faturas_app.model.apiModel.Token
 import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.network.retrofit.RetrofitCall
 import com.example.faturas_app.util.IDateUtil
 import com.example.faturas_app.util.IPreferencesHelper
 import com.github.mikephil.charting.data.BarEntry
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 data class Presenter(
-    val graficoView: HomeContract.View.FragmentGraficoView? = null,
+    val graficoView: Contract.View.FragmentGraficoView? = null,
     val context: Context,
-    val homeView: HomeContract.View.HomeView? = null,
-    val cardFragmentView: HomeContract.View.CreditCardFragmentView? = null,
-    val loginView: HomeContract.View.LoginView? = null,
+    val view: Contract.View.HomeView? = null,
+    val cardFragmentView: Contract.View.CreditCardFragmentView? = null,
+    val loginView: Contract.View.LoginView? = null,
 ) :
-    HomeContract.Presenter, IDateUtil, IPreferencesHelper {
-
-    val sharedPreferences = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
+    Contract.Presenter, IDateUtil, IPreferencesHelper {
 
 
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE)
+    private var token = getToken()
+    private var refreshToken = getRefreshToken()
     val listaVendas = ArrayList<Venda>()
-    val yVals1 = ArrayList<BarEntry>()
-    val labels = ArrayList<String>()
     private val barChartService =
         context.let { graficoView?.let { it1 -> BarChartService(it1.getBarChart(), it) } }
 
@@ -58,17 +62,19 @@ data class Presenter(
     override fun getGraficoVendas() {
 
 
-        val call = RetrofitCall.retrofit().getVendas("Bearer ${getToken()}")
+        val call = RetrofitCall.retrofit().getVendas("Bearer $token")
 
         call.enqueue(object : Callback<List<Venda>> {
             override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {
+                val yValues = ArrayList<BarEntry>()
+                val labels = ArrayList<String>()
                 if (response.isSuccessful) {
                     response.body()
                         ?.forEach {
                             listaVendas.add(it)
-                            yVals1.add(BarEntry(listaVendas.size.toFloat(), it.valor.toFloat()))
+                            yValues.add(BarEntry(listaVendas.size.toFloat(), it.valor.toFloat()))
                             labels.add(formatDataVenda(it.date))
-                            setDataGrafico(labels, yVals1)
+                            setDataGrafico(labels, yValues)
 
 
                         }
@@ -87,27 +93,28 @@ data class Presenter(
 
     override fun getListaVendas() {
 
-        val swipeRefreshLayout = homeView?.getComponentHomeBinding()?.swiperefresh
 
+        val call = RetrofitCall.retrofit()
 
-        val listaVendas = ArrayList<Venda>()
-
-
-        val call = RetrofitCall.retrofit().getVendas("Bearer ${getToken()}")
-
-        call.enqueue(object : Callback<List<Venda>> {
+        call.getVendas("Bearer $token").enqueue(object : Callback<List<Venda>> {
             override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {
-                swipeRefreshLayout?.isRefreshing = false
-                if (response.isSuccessful) {
+
+                try {
+                    verifyIsTokenExpirated(response.errorBody())
+                    val swipeRefreshLayout = view?.getComponentHomeBinding()?.swiperefresh
+
+                    swipeRefreshLayout?.isRefreshing = false
                     response.body()
                         ?.forEach {
                             it.date = formatDataVenda(it.date)
                             it.valor = "R$ " + it.valor
                             listaVendas.add(it)
-                            homeView?.mostraVendas(listaVendas)
+                            view?.mostraVendas(listaVendas)
 
 
                         }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
 
 
@@ -123,10 +130,11 @@ data class Presenter(
 
         })
 
+
     }
 
     override fun getCreditCardValues() {
-        val call = RetrofitCall.retrofit().getVendas("Bearer ${getToken()}")
+        val call = RetrofitCall.retrofit().getVendas("Bearer $token")
 
         call.enqueue(object : Callback<List<Venda>> {
             override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {
@@ -168,7 +176,7 @@ data class Presenter(
     }
 
     override fun login() {
-        val login = Login(
+        val login = LoginRequest(
             loginView?.getComponentLoginBinding()?.editEmail?.text.toString(),
             loginView?.getComponentLoginBinding()?.editSenha?.text.toString()
         )
@@ -177,11 +185,14 @@ data class Presenter(
         call.enqueue(object : Callback<Token?> {
             override fun onResponse(call: Call<Token?>, response: Response<Token?>) {
 
-                if (response.isSuccessful) {
+                try {
                     loginView?.startNewActivity()
-                    response.body()?.token?.let { saveToken(it) }
-//                    response.body()?.refreshToken?.let { view.saveRefreshToken(it) }
+                    response.body()?.accessToken?.let { saveToken(it) }
+                    response.body()?.let { saveRefreshToken(it.refreshToken) }
 
+                } catch (e: Exception) {
+//                    refreshtoken(response.body()?.refreshToken)
+                    e.printStackTrace()
                 }
             }
 
@@ -194,11 +205,68 @@ data class Presenter(
 
     }
 
+    override fun refreshtoken(refreshToken: String?) {
+
+        refreshToken?.let { RetrofitCall.retrofit().refreshtoken(it) }
+            ?.enqueue(object : Callback<RefreshToken> {
+                override fun onResponse(
+                    call: Call<RefreshToken>,
+                    response: Response<RefreshToken>
+                ) {
+                    try {
+                        if (response.errorBody()?.string()?.contains("403") == true) {
+                            view?.createAlertDialog(
+                                "Sessão expirada!",
+                                "Sua sessão expirou, faça o login novamente!",
+                                true
+                            )
+                        }
+                        response.body()
+                            ?.let { it.accessToken?.let { it1 -> saveNewAccessToken(it1) } }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<RefreshToken>, t: Throwable) {
+
+                }
+
+            })
+    }
+
+
+    override fun saveNewAccessToken(accessToken: String) {
+        sharedPreferences.edit()?.putString("newAccessToken", accessToken)?.apply()
+    }
+
+    override fun getNewAccessToken(): String? {
+        return sharedPreferences.getString("newAccessToken", null)
+    }
+
+
     override fun saveToken(token: String) {
-        sharedPreferences?.edit()?.putString("token", token)?.apply()
+        sharedPreferences.edit()?.putString("token", token)?.apply()
     }
 
     override fun getToken(): String? {
-       return sharedPreferences?.getString("token", null)
+        return sharedPreferences.getString("token", null)
+    }
+
+    override fun getRefreshToken(): String? = sharedPreferences.getString("refreshToken", null)
+    override fun saveRefreshToken(refreshToken: String?) {
+        sharedPreferences.edit().putString("refreshToken", refreshToken).apply()
+
+    }
+
+    override fun verifyIsTokenExpirated(responseBody: ResponseBody?) {
+        if (responseBody != null) {
+            if (responseBody.string().contains("401")) {
+                refreshtoken(refreshToken)
+
+            }
+
+
+        }
     }
 }

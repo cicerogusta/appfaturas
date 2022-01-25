@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.faturas_app.barchart.BarChartService
-import com.example.faturas_app.contract.HomeContract
+import com.example.faturas_app.contract.Contract
 import com.example.faturas_app.databinding.FragmentFirstBinding
 import com.example.faturas_app.presenter.Presenter
 import com.github.mikephil.charting.charts.BarChart
 
-class FirstFragment : Fragment(), HomeContract.View.FragmentGraficoView {
+class FirstFragment : Fragment(), Contract.View.FragmentGraficoView {
 
     lateinit var binding: FragmentFirstBinding
     private lateinit var barChartService: BarChartService

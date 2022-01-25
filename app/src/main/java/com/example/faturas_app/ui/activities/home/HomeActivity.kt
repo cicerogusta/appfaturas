@@ -1,5 +1,7 @@
 package com.example.faturas_app.ui.activities.home
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,13 +13,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.faturas_app.R
 import com.example.faturas_app.adapter.AdapterVendas
 import com.example.faturas_app.adapter.MyPagerAdapter
-import com.example.faturas_app.contract.HomeContract
+import com.example.faturas_app.contract.Contract
 import com.example.faturas_app.databinding.ActivityHomeBinding
 import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.presenter.Presenter
 import com.google.android.material.tabs.TabLayout
 
-class HomeActivity : AppCompatActivity(), HomeContract.View.HomeView {
+class HomeActivity : AppCompatActivity(), Contract.View.HomeView {
 
     lateinit var binding: ActivityHomeBinding
     lateinit var adapterVenda: AdapterVendas
@@ -29,12 +31,13 @@ class HomeActivity : AppCompatActivity(), HomeContract.View.HomeView {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
         binding.pager.adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
         setupTabLayout()
         pageChangeCallBack()
 
 
-        presenter = Presenter(homeView = this, context = this)
+        presenter = Presenter(view = this, context = this)
         presenter.getListaVendas()
 
         val refreshListener = SwipeRefreshLayout.OnRefreshListener {
@@ -103,6 +106,27 @@ class HomeActivity : AppCompatActivity(), HomeContract.View.HomeView {
 
     override fun getComponentHomeBinding(): ActivityHomeBinding {
         return binding
+    }
+
+    override fun finishActivity() {
+        finish()
+    }
+
+    override fun createAlertDialog(titulo: String, mensagem: String, needButton: Boolean) {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle(titulo)
+        dialog.setMessage(mensagem)
+        if (needButton) {
+            dialog.setPositiveButton(
+                "OK"
+            ) { dialog, which -> finish() }
+        }
+
+
+//        dialog.setPositiveButton("OK", null)
+        dialog.setCancelable(true)
+        dialog.create().show()
+
     }
 
 

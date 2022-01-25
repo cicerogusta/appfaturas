@@ -1,6 +1,10 @@
 package com.example.faturas_app.network.retrofit
 
+import com.example.faturas_app.model.apiModel.Venda
 import com.example.faturas_app.network.api.ApiService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

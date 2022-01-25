@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.faturas_app.contract.HomeContract
+import com.example.faturas_app.contract.Contract
 import com.example.faturas_app.databinding.FragmentSecondBinding
 import com.example.faturas_app.presenter.Presenter
 
 
-class SecondFragment : Fragment(), HomeContract.View.CreditCardFragmentView {
+class SecondFragment : Fragment(), Contract.View.CreditCardFragmentView {
 
     lateinit var binding: FragmentSecondBinding
     lateinit var presenter: Presenter

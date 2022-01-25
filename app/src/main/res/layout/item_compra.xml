@@ -1,59 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="venda"
             type="com.example.faturas_app.model.apiModel.Venda" />
     </data>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:clickable="true"
-        android:background="#FFFFFF"
-        android:focusable="true">
 
-        <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFFFFF"
+        >
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/rlData"
-            android:background="#ACACAC"
             android:layout_width="85dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#ACACAC">
 
             <View
                 android:id="@+id/view01"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:layout_width="3dp"
+                android:layout_width="6dp"
                 android:layout_height="40dp"
-                android:background="#af1010"
-                />
+                android:layout_marginStart="10dp"
+                android:background="@color/purple_500" />
+
             <TextView
                 android:id="@+id/tvData"
-                android:gravity="center"
-                android:layout_toEndOf="@id/view01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@{venda.date}"
-                tools:text="23 Mar" />
-        </RelativeLayout>
+                android:layout_toEndOf="@id/view01"
+                android:gravity="center"
+                tools:text="23 Mar"
+                android:text="@{venda.date}" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
         <TextView
-            android:textStyle="bold"
-            android:layout_marginStart="15dp"
-            android:gravity="center"
-            android:layout_toEndOf="@id/rlData"
-            android:text="Pagamento"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginStart="90dp"
+            android:gravity="center"
+            android:text="Pagamento"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvValor"
-            android:layout_marginEnd="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="340dp"
             android:gravity="center"
             tools:text="200R$"
-            android:text="@{venda.valor}"
-            android:layout_alignParentEnd="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:text="@{venda.valor.toString()}"/>
 
-    </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

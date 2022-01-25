@@ -1,14 +1,14 @@
 package com.example.faturas_app.contract
 
-import android.content.SharedPreferences
 import com.example.faturas_app.databinding.ActivityHomeBinding
 import com.example.faturas_app.databinding.ActivityLoginBinding
 import com.example.faturas_app.databinding.FragmentSecondBinding
 import com.example.faturas_app.model.apiModel.Venda
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarEntry
+import okhttp3.ResponseBody
 
-interface HomeContract {
+interface Contract {
 
     interface View {
         interface FragmentGraficoView {
@@ -20,6 +20,8 @@ interface HomeContract {
             fun pageChangeCallBack()
             fun setupTabLayout()
             fun getComponentHomeBinding() : ActivityHomeBinding
+            fun finishActivity()
+            fun createAlertDialog(titulo: String, mensagem: String,needButton: Boolean )
 
         }
 
@@ -31,6 +33,9 @@ interface HomeContract {
         interface LoginView {
             fun getComponentLoginBinding() : ActivityLoginBinding
             fun startNewActivity()
+            fun setupTextViewLogo()
+            fun createAlertDialog(titulo: String, mensagem: String)
+            fun verificaCampos(): Boolean
 
         }
     }
@@ -46,6 +51,10 @@ interface HomeContract {
 
         fun lastFourNumber(cardNumber: String): String
         fun login()
+        fun refreshtoken(refreshToken: String?)
+        fun saveNewAccessToken(accessToken: String)
+        fun getNewAccessToken(): String?
+
 
 
 
@@ -53,6 +62,9 @@ interface HomeContract {
         fun getListaVendas()
 
 
+        fun getRefreshToken(): String?
+        fun saveRefreshToken(refreshToken: String?)
+        fun verifyIsTokenExpirated(responseBody: ResponseBody?)
     }
 
 
