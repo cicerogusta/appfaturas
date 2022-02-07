@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.faturas_app.R
 import com.example.faturas_app.databinding.ItemCompraBinding
-import com.example.faturas_app.model.apiModel.Venda
+import com.example.faturas_app.model.Venda
+
 
 class AdapterVendas(
-    private var listVendas: ArrayList<Venda>
+    private var listVendas: List<Venda>
 ) :
     RecyclerView.Adapter<AdapterVendas.MyViewHolder?>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

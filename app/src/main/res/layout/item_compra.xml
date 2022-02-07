@@ -8,7 +8,7 @@
 
         <variable
             name="venda"
-            type="com.example.faturas_app.model.apiModel.Venda" />
+            type="com.example.faturas_app.model.Venda" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -37,7 +37,7 @@
                 android:layout_toEndOf="@id/view01"
                 android:gravity="center"
                 tools:text="23 Mar"
-                android:text="@{venda.date}" />
+                android:text="@{venda.formataDataVenda()}" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <TextView
