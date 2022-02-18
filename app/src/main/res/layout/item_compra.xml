@@ -37,7 +37,7 @@
                 android:layout_toEndOf="@id/view01"
                 android:gravity="center"
                 tools:text="23 Mar"
-                android:text="@{venda.formataDataVenda()}" />
+                android:text="@{venda.date}" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <TextView
@@ -46,7 +46,8 @@
             android:layout_marginStart="90dp"
             android:gravity="center"
             android:text="Pagamento"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/tvValor"

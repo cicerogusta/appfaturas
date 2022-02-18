@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.faturas_app" >
+    package="com.example.faturas_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,12 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Faturasapp">
+
         <activity
-            android:name=".ui.activities.home.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.login.LoginActivity"
-            android:exported="true" >
+            android:name=".ui.activities.home.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

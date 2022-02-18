@@ -22,9 +22,12 @@
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/drawable/ic_password_focused.xml" value="0.21574074074074073" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/activity_graphics.xml" value="0.34791666666666665" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/activity_home.xml" value="0.1" />
-        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/activity_login.xml" value="0.2" />
+        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/activity_main2.xml" value="0.20260416666666667" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/appbar_layout_config.xml" value="0.3625" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/barchart.xml" value="0.3625" />
+        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/custom_marker_view.xml" value="0.5" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/first_fragment.xml" value="0.37447916666666664" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/frag_simple_bar.xml" value="0.1" />
@@ -33,8 +36,10 @@
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/fragment_graphic.xml" value="0.3625" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/fragment_graphics.xml" value="0.35833333333333334" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/fragment_list.xml" value="0.3625" />
+        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/fragment_login.xml" value="0.20572916666666666" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/fragment_second.xml" value="0.3897978825794033" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/item_compra.xml" value="0.39444444444444443" />
+        <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/nav_header_main.xml" value="0.1" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/row_parcelas.xml" value="0.25" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/layout/second_fragment.xml" value="0.2351851851851852" />
         <entry key="..\:/Repositorios/appfaturas/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.35833333333333334" />

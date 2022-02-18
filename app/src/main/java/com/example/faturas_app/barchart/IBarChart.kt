@@ -4,11 +4,14 @@ import com.github.mikephil.charting.data.BarEntry
 
 interface IBarChart {
 
-    fun initBarChart()
+    fun configTouchBarChart()
     fun leftAxisSetup()
     fun rightAxisSetup()
+    fun xAxisSetup()
     fun legendSetup()
-    fun setData(labels: ArrayList<String>, yVals1: ArrayList<BarEntry>)
+    fun setData(yVals1: ArrayList<BarEntry>)
+    fun destaque()
+
 
 
 }

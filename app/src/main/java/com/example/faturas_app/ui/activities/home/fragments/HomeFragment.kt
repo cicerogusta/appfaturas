@@ -1,13 +1,20 @@
-package com.example.faturas_app.ui.activities.home
+package com.example.faturas_app.ui.activities.home.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -18,107 +25,82 @@ import com.example.faturas_app.databinding.ActivityHomeBinding
 import com.example.faturas_app.model.Venda
 import com.example.faturas_app.network.api.RetrofitService
 import com.example.faturas_app.repo.HomeRepository
-import com.example.faturas_app.ui.activities.home.fragments.FirstFragment
 import com.example.faturas_app.viewmodel.home.HomeViewModel
 import com.example.faturas_app.viewmodel.home.HomeViewModelFactory
-import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.tabs.TabLayout
-import java.lang.Exception
-
-class HomeActivity : AppCompatActivity() {
-
-    lateinit var binding: ActivityHomeBinding
-
-    lateinit var viewModel: HomeViewModel
-
-    private val retrofitService = RetrofitService.getInstance()
+import androidx.core.content.ContextCompat.getSystemService
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        viewModel =
-            ViewModelProvider(
-                this,
-                HomeViewModelFactory(HomeRepository((retrofitService)))
-            )[HomeViewModel::class.java]
-        pageChangeCallBack()
-        supportActionBar?.hide()
-        setupTabLayout()
+class HomeFragment : Fragment() {
 
+    private val binding by lazy {
+        ActivityHomeBinding.inflate(layoutInflater)
+    }
 
+    private val retrofitService by lazy {
+        RetrofitService.getInstance()
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            HomeViewModelFactory(HomeRepository((retrofitService)))
+        )[HomeViewModel::class.java]
     }
 
 
-    override fun onStart() {
-        super.onStart()
-        Toast.makeText(this, "onStart iniciado!", Toast.LENGTH_LONG).show()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        pageChangeCallBack()
+        setupTabLayout()
+        config()
+        activity?.let { hideSoftKeyboard(it) }
+    }
+    fun hideSoftKeyboard(activity: Activity) {
+        if (activity.currentFocus == null){
+            return
+        }
+        val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
+    }
 
+    fun config() {
         try {
+
             viewModel.liveVenda.observe(this, {
                 listarVendas(it)
-                Toast.makeText(this, "Lista preenchida!", Toast.LENGTH_LONG).show()
-                setGrafico(it)
-
             })
+
 
             viewModel.errorMessage.observe(this, {
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             })
         } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun setGrafico(listaVenda: List<Venda>) {
-        FirstFragment().onStart()
-        val listaVendas = ArrayList<Venda>()
-
-        val yValues = ArrayList<BarEntry>()
-        val labels = ArrayList<String>()
-        listaVenda.forEach {
-            listaVendas.add(it)
-            it.valor?.let { it1 -> BarEntry(listaVendas.size.toFloat(), it1.toFloat()) }
-                ?.let { it2 ->
-                    yValues.add(
-                        it2
-                    )
-                }
-            labels.add(Venda().formataDataVendaEspecifica(it.date))
-            FirstFragment().setData(labels, yValues)
-
-
-        }
-
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getVendas()
-    }
-
-
-    private fun configActionBar() {
-        supportActionBar?.hide()
-    }
 
     private fun listarVendas(vendas: List<Venda>) {
         val recyclerVendas = binding.recyclerVendas
 
         val adapterVenda = AdapterVendas(vendas)
 
-        recyclerVendas.layoutManager = LinearLayoutManager(this)
+        recyclerVendas.layoutManager = LinearLayoutManager(requireContext())
         recyclerVendas.adapter = adapterVenda
 
     }
 
     private fun pageChangeCallBack() {
-        binding.pager.adapter = MyPagerAdapter(supportFragmentManager, lifecycle)
+        binding.pager.adapter = MyPagerAdapter(childFragmentManager, lifecycle)
         binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 binding.tabs.selectTab(binding.tabs.getTabAt(position))
@@ -153,14 +135,14 @@ class HomeActivity : AppCompatActivity() {
         binding.tabs.getTabAt(0)!!.icon!!.colorFilter =
             BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
                 ContextCompat.getColor(
-                    this,
+                    requireContext(),
                     R.color.white
                 ), BlendModeCompat.SRC_IN
             )
         binding.tabs.getTabAt(1)!!.icon!!.colorFilter =
             BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
                 ContextCompat.getColor(
-                    this,
+                    requireContext(),
                     R.color.white
                 ), BlendModeCompat.SRC_IN
             )
@@ -178,13 +160,13 @@ class HomeActivity : AppCompatActivity() {
 
 
     fun createAlertDialog(titulo: String, mensagem: String, needButton: Boolean) {
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(requireContext())
         dialog.setTitle(titulo)
         dialog.setMessage(mensagem)
         if (needButton) {
             dialog.setPositiveButton(
                 "OK"
-            ) { _, _ -> finish() }
+            ) { _, _ -> onDestroy() }
         }
 
 

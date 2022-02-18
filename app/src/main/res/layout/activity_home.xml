@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <import type="com.example.faturas_app.ui.activities.home.HomeActivity"/>
+        <import type="com.example.faturas_app.ui.activities.home.fragments.HomeFragment"/>
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activitys.HomeActivity">
+        tools:context=".ui.activities.home.fragments.HomeFragment">
 
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -41,6 +42,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </FrameLayout>
+
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"

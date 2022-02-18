@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.faturas_app.databinding.FragmentSecondBinding
 
 
-class SecondFragment : Fragment() {
+class CreditCardFragment : Fragment() {
 
     lateinit var binding: FragmentSecondBinding
 
