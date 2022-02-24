@@ -18,7 +18,6 @@ class LoginFragment : Fragment() {
         FragmentLoginBinding.inflate(layoutInflater)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,7 +50,7 @@ class LoginFragment : Fragment() {
 
     }
 
-    fun verificaCampos(): Boolean {
+    private fun verificaCampos(): Boolean {
         if (binding.editEmail.text.toString().trim() == "" ) {
             binding.editEmail.error = "Campo email está vazio!"
             return false

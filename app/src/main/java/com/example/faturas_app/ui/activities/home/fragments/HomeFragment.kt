@@ -7,15 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.faturas_app.R
@@ -23,12 +19,9 @@ import com.example.faturas_app.adapter.AdapterVendas
 import com.example.faturas_app.adapter.MyPagerAdapter
 import com.example.faturas_app.databinding.ActivityHomeBinding
 import com.example.faturas_app.model.Venda
-import com.example.faturas_app.network.api.RetrofitService
-import com.example.faturas_app.repo.HomeRepository
 import com.example.faturas_app.viewmodel.home.HomeViewModel
-import com.example.faturas_app.viewmodel.home.HomeViewModelFactory
 import com.google.android.material.tabs.TabLayout
-import androidx.core.content.ContextCompat.getSystemService
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeFragment : Fragment() {
@@ -37,16 +30,7 @@ class HomeFragment : Fragment() {
         ActivityHomeBinding.inflate(layoutInflater)
     }
 
-    private val retrofitService by lazy {
-        RetrofitService.getInstance()
-    }
-
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            HomeViewModelFactory(HomeRepository((retrofitService)))
-        )[HomeViewModel::class.java]
-    }
+    private val viewModel: HomeViewModel by viewModel()
 
 
     override fun onCreateView(
@@ -58,6 +42,11 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getVendas()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -66,7 +55,7 @@ class HomeFragment : Fragment() {
         config()
         activity?.let { hideSoftKeyboard(it) }
     }
-    fun hideSoftKeyboard(activity: Activity) {
+    private fun hideSoftKeyboard(activity: Activity) {
         if (activity.currentFocus == null){
             return
         }
