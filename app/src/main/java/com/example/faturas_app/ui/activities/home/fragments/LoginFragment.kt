@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.example.faturas_app.R
 import com.example.faturas_app.databinding.FragmentLoginBinding
 import com.example.faturas_app.model.JwtResponse
 import com.example.faturas_app.model.LoginRequest
+import com.example.faturas_app.ui.status.Status
 import com.example.faturas_app.viewmodel.login.LoginViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
@@ -39,38 +42,28 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupTextViewLogo()
         binding.buttonLogin.setOnClickListener {
-            if (verificaCampos()) {
-                verificaToken()
-
-            }
+            login()
         }
+
     }
 
-    private fun verificaToken() {
-       viewModel.getUserToken(
-            LoginRequest(
-                binding.editEmail.text.toString(),
-                binding.editSenha.text.toString()
-            )
-        ).enqueue(object : Callback<JwtResponse> {
-           override fun onResponse(call: Call<JwtResponse>, response: Response<JwtResponse>) {
-               if (response.isSuccessful){
-                   viewModel.userToken.value = response.body()
-                   createAlertDialog("Ok", viewModel.userToken.value.toString())
-
-               } else {
-                   viewModel.userToken.value = response.body()
-                   createAlertDialog("Ok", viewModel.userToken.toString())
-               }
-           }
-
-           override fun onFailure(call: Call<JwtResponse>, t: Throwable) {
-               createAlertDialog("aaa", t.message.toString())
-
-           }
-
-       })
-
+    private fun login() {
+        if (verificaCampos()) {
+            viewModel.getUserToken(LoginRequest(binding.editEmail.text.toString(), binding.editSenha.text.toString())).observe(requireActivity(), Observer {
+                when (it.status) {
+                    Status.LOADING -> {
+                        // Mostrar um loader
+                    }
+                    Status.SUCCESS -> {
+                        // Mostrar sucesso
+                    }
+                    Status.ERROR -> {
+                        // Mostrar mensagem de erro
+                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            })
+        }
     }
 
     private fun setupTextViewLogo() {
@@ -103,5 +96,8 @@ class LoginFragment : Fragment() {
         return true
     }
 
-
 }
+
+
+
+

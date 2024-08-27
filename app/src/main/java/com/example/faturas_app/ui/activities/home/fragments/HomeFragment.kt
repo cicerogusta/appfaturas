@@ -64,17 +64,17 @@ class HomeFragment : Fragment() {
     }
 
     fun config() {
-        try {
-
-            viewModel.liveVenda.observe(this, {
-                listarVendas(it)
-            })
-
-
-            viewModel.errorMessage.observe(this, {
-            })
-        } catch (e: Exception) {
-        }
+//        try {
+//
+//            viewModel.liveVenda.observe(this, {
+//                listarVendas(it)
+//            })
+//
+//
+//            viewModel.errorMessage.observe(this, {
+//            })
+//        } catch (e: Exception) {
+//        }
     }
 
 

@@ -4,7 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.faturas_app.barchart.BarChartService
 import com.example.faturas_app.model.Venda
-import com.example.faturas_app.repo.HomeRepository
+import com.example.faturas_app.repository.HomeRepository
+import com.example.faturas_app.repository.HomeRepositoryImp
 import com.example.faturas_app.utli.IDate
 import com.github.mikephil.charting.data.BarEntry
 import retrofit2.Call
@@ -15,42 +16,29 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class HomeViewModel(
-    private val repository: HomeRepository,
+    private val repository: HomeRepositoryImp,
 ) : ViewModel(), IDate {
 
-     val liveVenda = MutableLiveData<List<Venda>>()
-     val errorMessage = MutableLiveData<String>()
-     val listaVendas = ArrayList<Venda>()
+
 
 
     fun getVendas() {
 
-        val request = repository.getVendas()
-        request.enqueue(object : Callback<List<Venda>> {
-            override fun onResponse(call: Call<List<Venda>>, response: Response<List<Venda>>) {
-                liveVenda.postValue(response.body())
-            }
-
-            override fun onFailure(call: Call<List<Venda>>, t: Throwable) {
-                errorMessage.postValue(t.message)
-            }
-
-        })
     }
 
 
-    fun setDataGrafico(barChartService: BarChartService) {
-        val yVals1 = ArrayList<BarEntry>()
-        val labels = ArrayList<String>()
-        liveVenda.value?.forEach {
-            listaVendas.add(it)
-            yVals1.add(BarEntry(listaVendas.size.toFloat(), it.valor.toFloat()))
-            labels.add(formataDataVenda(it.date))
-            barChartService.setData(yVals1)
-        }
-
-
-    }
+//    fun setDataGrafico(barChartService: BarChartService) {
+//        val yVals1 = ArrayList<BarEntry>()
+//        val labels = ArrayList<String>()
+//        liveVenda.value?.forEach {
+//            listaVendas.add(it)
+//            yVals1.add(BarEntry(listaVendas.size.toFloat(), it.valor.toFloat()))
+//            labels.add(formataDataVenda(it.date))
+//            barChartService.setData(yVals1)
+//        }
+//
+//
+//    }
 
     override fun formataDataVenda(date: String): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)

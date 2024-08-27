@@ -40,14 +40,14 @@ class GraphicFragment : Fragment() {
         barChartService.rightAxisSetup()
         barChartService.leftAxisSetup()
         barChartService.legendSetup()
-        viewModel.setDataGrafico(barChartService)
+//        viewModel.setDataGrafico(barChartService)
 
 
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.setDataGrafico(barChartService)
+//        viewModel.setDataGrafico(barChartService)
 
     }
 
