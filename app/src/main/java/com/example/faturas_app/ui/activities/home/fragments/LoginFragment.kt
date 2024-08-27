@@ -10,6 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.faturas_app.R
 import com.example.faturas_app.databinding.FragmentLoginBinding
+import com.example.faturas_app.model.JwtResponse
+import com.example.faturas_app.model.LoginRequest
+import com.example.faturas_app.viewmodel.login.LoginViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginFragment : Fragment() {
@@ -17,6 +24,8 @@ class LoginFragment : Fragment() {
     private val binding by lazy {
         FragmentLoginBinding.inflate(layoutInflater)
     }
+
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,8 +38,39 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupTextViewLogo()
-        binding.buttonLogin.setOnClickListener { if (verificaCampos()) Navigation.findNavController(binding.root).navigate(
-            R.id.action_nav_login_to_nav_home) }
+        binding.buttonLogin.setOnClickListener {
+            if (verificaCampos()) {
+                verificaToken()
+
+            }
+        }
+    }
+
+    private fun verificaToken() {
+       viewModel.getUserToken(
+            LoginRequest(
+                binding.editEmail.text.toString(),
+                binding.editSenha.text.toString()
+            )
+        ).enqueue(object : Callback<JwtResponse> {
+           override fun onResponse(call: Call<JwtResponse>, response: Response<JwtResponse>) {
+               if (response.isSuccessful){
+                   viewModel.userToken.value = response.body()
+                   createAlertDialog("Ok", viewModel.userToken.value.toString())
+
+               } else {
+                   viewModel.userToken.value = response.body()
+                   createAlertDialog("Ok", viewModel.userToken.toString())
+               }
+           }
+
+           override fun onFailure(call: Call<JwtResponse>, t: Throwable) {
+               createAlertDialog("aaa", t.message.toString())
+
+           }
+
+       })
+
     }
 
     private fun setupTextViewLogo() {
@@ -51,7 +91,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun verificaCampos(): Boolean {
-        if (binding.editEmail.text.toString().trim() == "" ) {
+        if (binding.editEmail.text.toString().trim() == "") {
             binding.editEmail.error = "Campo email está vazio!"
             return false
         }
